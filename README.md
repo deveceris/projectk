@@ -1,3 +1,4 @@
 
-# h2database 추가함
-# projectlombok 추가함
+# h2database 썻어요
+# projectlombok 썻어요
+# swagger2 썻어요

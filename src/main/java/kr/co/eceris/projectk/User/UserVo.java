@@ -1,4 +1,4 @@
-package kr.co.eceris.projectk.User;
+package kr.co.eceris.projectk.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package kr.co.eceris.projectk.User;
+package kr.co.eceris.projectk.user;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
