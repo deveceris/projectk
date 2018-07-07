@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 public class UserController {
@@ -14,21 +15,22 @@ public class UserController {
     private UserRepository userRepository;
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>> list() {
-        return ResponseEntity.ok(userRepository.findByIdIsNotNull());
+    public ResponseEntity<List<UserVo>> list() {
+        List<User> users = userRepository.findByIdIsNotNull();
+        return ResponseEntity.ok(users.stream().map(user -> user.toVo()).collect(Collectors.toList()));
     }
 
     @PostMapping("/user")
-    public ResponseEntity<User> create(@RequestBody UserVo userVo) {
+    public ResponseEntity<UserVo> create(@RequestBody UserVo userVo) {
         User saved = userRepository.save(User.of(userVo));
-        return ResponseEntity.ok(saved);
+        return ResponseEntity.ok(saved.toVo());
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<User> get(@PathVariable Long id) {
+    public ResponseEntity<UserVo> get(@PathVariable Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()) {
-            return ResponseEntity.ok(optionalUser.get());
+            return ResponseEntity.ok(optionalUser.get().toVo());
         }
         return ResponseEntity.notFound().build();
     }
