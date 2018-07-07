@@ -1,5 +1,8 @@
 package kr.co.eceris.projectk.book;
 
+import kr.co.eceris.projectk.user.User;
+import kr.co.eceris.projectk.user.UserService;
+import kr.co.eceris.projectk.user.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,24 +17,30 @@ public class BookService {
 
     @Autowired
     private BookApiConnector apiConnector;
+
     @Autowired
     private BookSearchHistoryRepository bookSearchHistoryRepository;
 
+    @Autowired
+    private UserService userService;
+
     @Transactional
-    public Bookmark create(String isbn, String title) {
+    public Bookmark createBookmark(Long userId, String isbn, String title) {
+        User user = userService.get(userId);
         Bookmark bookmark = new Bookmark();
         bookmark.setIsbn(isbn);
         bookmark.setTitle(title);
+        bookmark.setUser(user);
         return bookmarkRepository.save(bookmark);
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void deleteBookmark(Long id) {
         bookmarkRepository.deleteById(id);
     }
 
     @Transactional(readOnly = true)
-    public List<Bookmark> list() {
+    public List<Bookmark> getBookmarks() {
         return bookmarkRepository.findByIdIsNotNull();
     }
 

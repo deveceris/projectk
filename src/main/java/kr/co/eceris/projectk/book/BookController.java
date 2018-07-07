@@ -46,19 +46,20 @@ public class BookController {
     @ApiVersion(1)
     @GetMapping("/bookmarks")
     public ResponseEntity<List<Bookmark>> list() {
-        return ResponseEntity.ok(bookService.list());
+        return ResponseEntity.ok(bookService.getBookmarks());
     }
 
     @ApiVersion(1)
     @PostMapping("/bookmark/{ispn}/title/{title}")
     public ResponseEntity<Bookmark> mark(@PathVariable String isbn, @PathVariable String title) {
-        return ResponseEntity.ok(bookService.create(isbn, title));
+        Long userId = securityContext.getAuthenticationUserId();
+        return ResponseEntity.ok(bookService.createBookmark(userId, isbn, title));
     }
 
     @ApiVersion(1)
     @DeleteMapping("/bookmark/{id}")
     public ResponseEntity delete(@PathVariable Long id) {
-        bookService.delete(id);
+        bookService.deleteBookmark(id);
         return ResponseEntity.ok().build();
     }
 }

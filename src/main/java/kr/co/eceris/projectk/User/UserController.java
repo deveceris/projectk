@@ -6,35 +6,33 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @ApiVersion(1)
     @GetMapping("/users")
     public ResponseEntity<List<UserVo>> list() {
-        List<User> users = userRepository.findByIdIsNotNull();
+        List<User> users = userService.getUsers();
         return ResponseEntity.ok(users.stream().map(user -> user.toVo()).collect(Collectors.toList()));
     }
+
     @ApiVersion(1)
     @PostMapping("/user")
     public ResponseEntity<UserVo> create(@RequestBody UserVo userVo) {
-        User saved = userRepository.save(User.of(userVo));
+        User saved = userService.create(userVo);
         return ResponseEntity.ok(saved.toVo());
     }
+
     @ApiVersion(1)
     @GetMapping("/user/{id}")
     public ResponseEntity<UserVo> get(@PathVariable Long id) {
-        Optional<User> optionalUser = userRepository.findById(id);
-        if (optionalUser.isPresent()) {
-            return ResponseEntity.ok(optionalUser.get().toVo());
-        }
-        return ResponseEntity.notFound().build();
+        User saved = userService.get(id);
+        return ResponseEntity.ok(saved.toVo());
     }
 
 }
