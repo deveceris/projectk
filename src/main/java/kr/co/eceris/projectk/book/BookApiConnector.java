@@ -46,6 +46,7 @@ public class BookApiConnector {
      */
 //    https://dapi.kakao.com/v2/search/book?query=개미&page=1&size=10
 //    query, sort, page, size, target, category
+//    https://developers.kakao.com/docs/restapi/search#%EC%B1%85-%EA%B2%80%EC%83%89
     public DocumentsVo search(String query, String sort, String page, String size, String target, String category) {
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         parameters.add("query", query);

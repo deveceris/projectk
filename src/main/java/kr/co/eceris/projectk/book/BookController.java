@@ -1,7 +1,7 @@
 package kr.co.eceris.projectk.book;
 
 import kr.co.eceris.projectk.config.ApiVersion;
-import kr.co.eceris.projectk.security.SecurityContext;
+import kr.co.eceris.projectk.config.SecurityContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +31,7 @@ public class BookController {
     @ApiVersion(1)
     @GetMapping("/book/{isbn}")
     public ResponseEntity<DocumentsVo> get(@PathVariable String isbn) {
-        DocumentsVo documentsVo = bookApiConnector.search(isbn, null, "1", "10", "isbn", null);
+        DocumentsVo documentsVo = bookApiConnector.search(isbn, null, "1", "1", "isbn", null);
         return ResponseEntity.ok(documentsVo);
     }
 

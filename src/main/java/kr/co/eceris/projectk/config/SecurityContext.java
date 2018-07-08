@@ -1,5 +1,6 @@
-package kr.co.eceris.projectk.security;
+package kr.co.eceris.projectk.config;
 
+import kr.co.eceris.projectk.security.AccountUserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -29,5 +30,4 @@ public class SecurityContext extends SecurityContextHolder {
         AccountUserDetails user = (AccountUserDetails) getContext().getAuthentication().getPrincipal();
         return user.getPassword();
     }
-
 }

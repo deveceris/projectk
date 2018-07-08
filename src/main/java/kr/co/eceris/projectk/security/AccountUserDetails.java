@@ -1,16 +1,17 @@
 package kr.co.eceris.projectk.security;
 
 import kr.co.eceris.projectk.user.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Arrays;
 import java.util.Collection;
 
+@Slf4j
 public class AccountUserDetails implements UserDetails {
-    private static final Logger logger = LoggerFactory.getLogger(AccountUserDetails.class);
     private static final long serialVersionUID = 1L;
+
     User user;
 
     public AccountUserDetails(User account) {
@@ -18,7 +19,7 @@ public class AccountUserDetails implements UserDetails {
     }
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Arrays.asList();
     }
 
     public Long getId() {

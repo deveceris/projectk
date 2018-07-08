@@ -20,4 +20,10 @@ public class BookApiConnectorTest extends TestContext {
         DocumentsVo result = bookApiConnector.search("개미", null, "1", "10", null, null);
         assertTrue("Success for select Documents", result.getDocuments().size() > 0);
     }
+
+    @Test
+    public void isbn으로_1개_조회() {
+        DocumentsVo result = bookApiConnector.search("8932903492", null, "1", "1", "isbn", null);
+        assertTrue("Success for select Documents", result.getDocuments().size() == 1);
+    }
 }
