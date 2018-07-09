@@ -1,4 +1,4 @@
-package kr.co.eceris.projectk.security;
+package kr.co.eceris.projectk.auth;
 
 import kr.co.eceris.projectk.user.User;
 import lombok.extern.slf4j.Slf4j;

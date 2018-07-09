@@ -24,7 +24,7 @@ public class BookServiceTest extends TestContext {
     public void 북마크삭제() {
         Bookmark bookmark = bookService.createBookmark(1l, "test2", "개미");
         bookService.deleteBookmark(bookmark.getId());
-        boolean condition = bookService.getBookmarks().stream().anyMatch(b -> b.getId() == bookmark.getId());
+        boolean condition = bookService.getBookmarks(1l).stream().anyMatch(b -> b.getId() == bookmark.getId());
         Assert.assertFalse("is any match id", condition);
     }
 
@@ -36,6 +36,6 @@ public class BookServiceTest extends TestContext {
         bookService.createBookmark(1l, "test6", "개미4");
         bookService.createBookmark(1l, "test7", "개미5");
 
-        Assert.assertTrue("is same count", bookService.getBookmarks().size() == 5);
+        Assert.assertTrue("is same count", bookService.getBookmarks(1l).size() == 5);
     }
 }

@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 @RestController
 public class UserController {
 
@@ -15,21 +14,21 @@ public class UserController {
     private UserService userService;
 
     @ApiVersion(1)
-    @GetMapping("/users")
+    @GetMapping("/api/users")
     public ResponseEntity<List<UserVo>> list() {
         List<User> users = userService.getUsers();
         return ResponseEntity.ok(users.stream().map(user -> user.toVo()).collect(Collectors.toList()));
     }
 
     @ApiVersion(1)
-    @PostMapping("/user")
+    @PostMapping("/api/user")
     public ResponseEntity<UserVo> create(@RequestBody UserVo userVo) {
         User saved = userService.create(userVo);
         return ResponseEntity.ok(saved.toVo());
     }
 
     @ApiVersion(1)
-    @GetMapping("/user/{id}")
+    @GetMapping("/api/user/{id}")
     public ResponseEntity<UserVo> get(@PathVariable Long id) {
         User saved = userService.get(id);
         return ResponseEntity.ok(saved.toVo());

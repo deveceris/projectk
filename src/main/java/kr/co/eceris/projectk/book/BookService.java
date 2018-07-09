@@ -40,8 +40,8 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public List<Bookmark> getBookmarks() {
-        return bookmarkRepository.findByIdIsNotNull();
+    public List<Bookmark> getBookmarks(Long userId) {
+        return bookmarkRepository.findByUserId(userId);
     }
 
     @Transactional(readOnly = true)
