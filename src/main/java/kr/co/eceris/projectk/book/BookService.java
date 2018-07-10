@@ -27,7 +27,7 @@ public class BookService {
     public Bookmark createBookmark(Long userId, String isbn, String title) {
         User user = userService.get(userId);
         Bookmark bookmark = new Bookmark();
-        bookmark.setIsbn(isbn);
+        bookmark.setIsbn(isbn.split(" ")[0]);
         bookmark.setTitle(title);
         bookmark.setUser(user);
         return bookmarkRepository.save(bookmark);
