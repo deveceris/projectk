@@ -1,5 +1,7 @@
-package kr.co.eceris.projectk.auth;
+package kr.co.eceris.projectk.config;
 
+import kr.co.eceris.projectk.auth.JWTAuthenticationFilter;
+import kr.co.eceris.projectk.auth.JWTLoginFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -9,10 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.header.writers.frameoptions.WhiteListedAllowFromStrategy;
-import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
-
-import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -34,14 +32,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/webjars/**").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll()
                 .antMatchers("/v2/**").permitAll()
-                .antMatchers("/favicon.ico").permitAll()
                 .antMatchers("/h2/**").permitAll()
+
+                .antMatchers("/favicon.ico").permitAll()
                 .antMatchers("/*.css").permitAll()
                 .antMatchers("/*.js").permitAll()
-                .antMatchers("/api/user/**").permitAll()
-                .antMatchers("/api/users").permitAll()
+
+                .antMatchers("/api/v1/user").permitAll()
                 .antMatchers("/api/login").permitAll()
+
                 .antMatchers("/login").permitAll()
+                .antMatchers("/search").permitAll()
+                .antMatchers("/bookmark").permitAll()
                 .antMatchers("/").permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -52,6 +54,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(new JWTLoginFilter("/api/login", authenticationManager()),
                         UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JWTAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
+
     }
 
     @Override

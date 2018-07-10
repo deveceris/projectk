@@ -9,5 +9,8 @@ import java.util.List;
 public interface BookmarkRepository extends CrudRepository<Bookmark, Long> {
 
     List<Bookmark> findByIdIsNotNull();
+
     List<Bookmark> findByUserId(Long userId);
+
+    Bookmark findByUserIdAndIsbn(Long userId, String isbn);
 }

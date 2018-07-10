@@ -17,13 +17,19 @@ public class BookApiConnectorTest extends TestContext {
 
     @Test
     public void 개미_데이터_10개_잘가져오나() {
-        DocumentsVo result = bookApiConnector.search("개미", null, "1", "10", null, null);
+        DocumentsVo result = bookApiConnector.search("개미", "1", "10", null);
+        assertTrue("Success for select Documents", result.getDocuments().size() > 0);
+    }
+
+    @Test
+    public void 어떻게_데이터_10개_잘가져오나() {
+        DocumentsVo result = bookApiConnector.search("카카오뱅크", "1", "5", null);
         assertTrue("Success for select Documents", result.getDocuments().size() > 0);
     }
 
     @Test
     public void isbn으로_1개_조회() {
-        DocumentsVo result = bookApiConnector.search("8932903492", null, "1", "1", "isbn", null);
+        DocumentsVo result = bookApiConnector.search("8932903492", "1", "1", "isbn");
         assertTrue("Success for select Documents", result.getDocuments().size() == 1);
     }
 }

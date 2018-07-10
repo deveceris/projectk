@@ -2,7 +2,6 @@ package kr.co.eceris.projectk.book;
 
 import kr.co.eceris.projectk.user.User;
 import kr.co.eceris.projectk.user.UserService;
-import kr.co.eceris.projectk.user.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +33,11 @@ public class BookService {
         return bookmarkRepository.save(bookmark);
     }
 
+    @Transactional(readOnly = true)
+    public Bookmark getBookmark(Long userId, String isbn) {
+        return bookmarkRepository.findByUserIdAndIsbn(userId, isbn);
+    }
+
     @Transactional
     public void deleteBookmark(Long id) {
         bookmarkRepository.deleteById(id);
@@ -46,15 +50,15 @@ public class BookService {
 
     @Transactional(readOnly = true)
     public List<BookSearchHistory> searchTop10Histories(Long userId) {
-        return bookSearchHistoryRepository.findTop10ByUserId(userId);
+        return bookSearchHistoryRepository.findTop10ByUserIdOrderByIdDesc(userId);
     }
 
     @Transactional
-    public DocumentsVo search(Long userId, String query, String sort, String page, String size, String target, String category) {
+    public DocumentsVo search(Long userId, String query, String page, String size, String target) {
         BookSearchHistory bookSearchHistory = new BookSearchHistory();
         bookSearchHistory.setKeyword(query);
         bookSearchHistory.setUserId(userId);
         bookSearchHistoryRepository.save(bookSearchHistory);
-        return apiConnector.search(query, sort, page, size, target, category);
+        return apiConnector.search(query, page, size, target);
     }
 }

@@ -8,6 +8,6 @@ import java.util.List;
 @Repository
 public interface BookSearchHistoryRepository extends CrudRepository<BookSearchHistory, Long> {
 
-    List<BookSearchHistory> findTop10ByUserId(Long userId);
+    List<BookSearchHistory> findTop10ByUserIdOrderByIdDesc(Long userId);
 
 }
