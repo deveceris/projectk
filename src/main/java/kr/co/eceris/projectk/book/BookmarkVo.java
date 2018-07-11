@@ -14,6 +14,13 @@ import java.util.List;
 @AllArgsConstructor
 public class BookmarkVo {
     private Long id;
-    private String title;
+    private String query;
+    private int page;
+    private int size;
+    private String target;
+    private String sort;
     private String isbn;
+    private String barcode;
+    private String publisher;
+    private String title;
 }

@@ -53,7 +53,7 @@ public class Application {
         return new BCryptPasswordEncoder();
     }
 
-    @GetMapping({"/bookmark", "/search"})
+    @GetMapping({"/bookmark", "/search", "/book", "/login", "/signup"})
     public String home() {
         return "index";
     }

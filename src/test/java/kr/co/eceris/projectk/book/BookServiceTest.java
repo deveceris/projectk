@@ -16,13 +16,14 @@ public class BookServiceTest extends TestContext {
     @Test
     public void 북마크생성() {
         String title = "개미";
-        Bookmark bookmark = bookService.createBookmark(1l, "test1", title);
+        Bookmark bookmark = bookService.createBookmark(1l, title, 1, 10, "all", "accuracy", "isbn", "바코드", "출판사", title);
+//        createBookmark(Long userId, String query, int page, int size, String target, String sort, String isbn, String barcode, String publisher, String title) {
         Assert.assertTrue("is same title", title.equals(bookmark.getTitle()));
     }
 
     @Test
     public void 북마크삭제() {
-        Bookmark bookmark = bookService.createBookmark(1l, "test2", "개미");
+        Bookmark bookmark = bookService.createBookmark(1l, "개미", 1, 10, "all", "accuracy", "isbn", "바코드", "출판사", "개미");
         bookService.deleteBookmark(bookmark.getId());
         boolean condition = bookService.getBookmarks(1l).stream().anyMatch(b -> b.getId() == bookmark.getId());
         Assert.assertFalse("is any match id", condition);
@@ -30,11 +31,12 @@ public class BookServiceTest extends TestContext {
 
     @Test
     public void 북마크목록() {
-        bookService.createBookmark(1l, "test3", "개미1");
-        bookService.createBookmark(1l, "test4", "개미2");
-        bookService.createBookmark(1l, "test5", "개미3");
-        bookService.createBookmark(1l, "test6", "개미4");
-        bookService.createBookmark(1l, "test7", "개미5");
+        bookService.createBookmark(1l, "개미1", 1, 10, "all", "accuracy", "isbn", "바코드", "출판사1", "개미1");
+        bookService.createBookmark(1l, "개미2", 2, 10, "all", "accuracy", "isbn", "바코드", "출판사2", "개미2");
+        bookService.createBookmark(1l, "개미3", 3, 10, "all", "accuracy", "isbn", "바코드", "출판사3", "개미3");
+        bookService.createBookmark(1l, "개미4", 4, 10, "all", "accuracy", "isbn", "바코드", "출판사4", "개미4");
+        bookService.createBookmark(1l, "개미5", 5, 10, "all", "accuracy", "isbn", "바코드", "출판사5", "개미5");
+
 
         Assert.assertTrue("is same count", bookService.getBookmarks(1l).size() == 5);
     }

@@ -20,14 +20,20 @@ public class Bookmark {
     @ManyToOne
     private User user;
 
+    /**
+     * 아래 정보를 토대로 상세 조회(rest)
+     */
+    private String query;
+    private int page;
+    private int size;
+    private String target;
+    private String sort;
+    private String isbn;
+    private String barcode;
+    private String publisher;
     private String title;
 
-    /**
-     * isbn 정보를 토대로 상세 조회(rest)
-     */
-    private String isbn;
-
     public BookmarkVo toVo() {
-        return new BookmarkVo(id, title, isbn);
+        return new BookmarkVo(id, query, page, size, target, sort, isbn, barcode, publisher, title);
     }
 }
