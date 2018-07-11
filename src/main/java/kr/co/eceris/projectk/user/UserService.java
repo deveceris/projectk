@@ -24,6 +24,10 @@ public class UserService {
     }
 
     public User create(UserVo userVo) {
+        User check = userRepository.findByUsername(userVo.getUsername());
+        if (check != null) {
+            throw new IllegalArgumentException("username duplicated.");
+        }
         User target = User.of(userVo);
         target.setPassword(passwordEncoder.encode(userVo.getPassword()));
         return userRepository.save(target);

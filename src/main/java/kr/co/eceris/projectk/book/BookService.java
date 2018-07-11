@@ -48,17 +48,20 @@ public class BookService {
         return bookmarkRepository.findByUserId(userId);
     }
 
+    @Transactional
+    public BookSearchHistory createHistory(Long userId, String keyword) {
+        BookSearchHistory history = new BookSearchHistory();
+        history.setKeyword(keyword);
+        history.setUserId(userId);
+        return bookSearchHistoryRepository.save(history);
+    }
+
     @Transactional(readOnly = true)
     public List<BookSearchHistory> searchTop10Histories(Long userId) {
         return bookSearchHistoryRepository.findTop10ByUserIdOrderByIdDesc(userId);
     }
 
-    @Transactional
-    public DocumentsVo search(Long userId, String query, String page, String size, String target) {
-        BookSearchHistory bookSearchHistory = new BookSearchHistory();
-        bookSearchHistory.setKeyword(query);
-        bookSearchHistory.setUserId(userId);
-        bookSearchHistoryRepository.save(bookSearchHistory);
-        return apiConnector.search(query, page, size, target);
+    public DocumentsVo search(Long userId, String query, String page, String size, String target, String sort) {
+        return apiConnector.search(query, page, size, target, sort);
     }
 }

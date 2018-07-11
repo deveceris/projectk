@@ -41,16 +41,18 @@ public class BookApiConnector {
      * @param page     / 결과 페이지 번호	/ 비필수 / 1-50 사이 Integer
      * @param size     / 한 페이지에 보여질 문서의 개수 / 비필수 /
      * @param target   / 검색 필드 제한 / 비필수 / all, title, publisher, isbn
+     * @param sort   / 결과 문서 정렬방식 / 비필수 / accuracy (정확도순) or recency (최신순) or sales (판매량순)
      */
 //    https://dapi.kakao.com/v2/search/book?query=개미&page=1&size=10
 //    query, sort, page, size, target, category
 //    https://developers.kakao.com/docs/restapi/search#%EC%B1%85-%EA%B2%80%EC%83%89
-    public DocumentsVo search(String query, String page, String size, String target) {
+    public DocumentsVo search(String query, String page, String size, String target, String sort) {
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         parameters.add("query", query);
         if (Optional.ofNullable(page).isPresent()) parameters.add("page", page);
         if (Optional.ofNullable(size).isPresent()) parameters.add("size", size);
         if (Optional.ofNullable(target).isPresent()) parameters.add("target", target);
+        if (Optional.ofNullable(sort).isPresent()) parameters.add("sort", sort);
 
         String url = UriComponentsBuilder.fromHttpUrl(apiUrl).queryParams(parameters).build().toString();
         ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<String>(getHeadersWithKey()), String.class);

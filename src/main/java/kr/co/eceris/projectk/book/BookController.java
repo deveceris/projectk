@@ -29,10 +29,10 @@ public class BookController {
 
     @ApiVersion(1)
     @GetMapping("/book/search")
-    public ResponseEntity<ApiResponse> search(@RequestParam String query, @RequestParam(required = false) String page, @RequestParam(required = false) String size, @RequestParam(required = false) String target) {
+    public ResponseEntity<ApiResponse> search(@RequestParam String query, @RequestParam(required = false) String page, @RequestParam(required = false) String size, @RequestParam(required = false) String target, @RequestParam(required = false) String sort) {
 //        Long userId = webSecurityContextt.getAuthenticationUserId();
         Long userId = 1l;
-        DocumentsVo search = bookService.search(userId, query, page, size, target);
+        DocumentsVo search = bookService.search(userId, query, page, size, target, sort);
         return ResponseEntity.ok(ApiResponse.data(search));
     }
 
@@ -40,16 +40,24 @@ public class BookController {
     @GetMapping("/book/{isbn}")
     public ResponseEntity<ApiResponse> get(@PathVariable String isbn) {
         Long authenticationUserId = webSecurityContextt.getAuthenticationUserId();
-        DocumentsVo documentsVo = bookApiConnector.search(isbn, "1", "1", "isbn");
+        DocumentsVo documentsVo = bookApiConnector.search(isbn, "1", "1", "isbn", "");
         return ResponseEntity.ok(ApiResponse.data(documentsVo));
     }
 
     @ApiVersion(1)
-    @GetMapping("/book/recent")
+    @GetMapping("/histories")
     public ResponseEntity<ApiResponse> histories() {
         Long userId = webSecurityContextt.getAuthenticationUserId();
         List<BookSearchHistory> bookSearchHistories = bookService.searchTop10Histories(userId);
         return ResponseEntity.ok(ApiResponse.data(bookSearchHistories));
+    }
+
+    @ApiVersion(1)
+    @PostMapping("/history")
+    public ResponseEntity<ApiResponse> createHistory(@RequestParam String keyword) {
+        Long userId = webSecurityContextt.getAuthenticationUserId();
+        BookSearchHistory history = bookService.createHistory(userId, keyword);
+        return ResponseEntity.ok(ApiResponse.data(history));
     }
 
     @ApiVersion(1)
