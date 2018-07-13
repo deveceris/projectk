@@ -62,8 +62,18 @@ public class BookService {
         bookmarkRepository.deleteById(id);
     }
 
+
+    @Transactional(readOnly = true)
+    public BookSearchHistory getHistory(Long userId, String keyword) {
+        return bookSearchHistoryRepository.findByUserIdAndKeyword(userId, keyword);
+    }
+
     @Transactional
     public BookSearchHistory createHistory(Long userId, String keyword) {
+        BookSearchHistory saved = bookSearchHistoryRepository.findByUserIdAndKeyword(userId, keyword);
+        if (Optional.ofNullable(saved).isPresent()) {
+            return saved;
+        }
         BookSearchHistory history = new BookSearchHistory();
         history.setKeyword(keyword);
         history.setUserId(userId);
@@ -87,9 +97,11 @@ public class BookService {
                     } else if (!StringUtils.isEmpty(bookVo.getBarcode()) && bookVo.getBarcode().equals(barcode)) {
                         return true;
                     } else if (!StringUtils.isEmpty(bookVo.getPublisher()) && bookVo.getPublisher().equals(publisher)) {
-                        return true;
-                    } else if (!StringUtils.isEmpty(bookVo.getTitle()) && bookVo.getTitle().equals(title)) {
-                        return true;
+                        if (!StringUtils.isEmpty(bookVo.getTitle()) && bookVo.getTitle().equals(title)) {
+                            return true;
+                        } else{
+                            return false;
+                        }
                     } else {
                         return false;
                     }

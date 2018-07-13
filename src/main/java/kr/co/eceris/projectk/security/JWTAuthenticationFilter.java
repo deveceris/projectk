@@ -1,4 +1,4 @@
-package kr.co.eceris.projectk.auth;
+package kr.co.eceris.projectk.security;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;

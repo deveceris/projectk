@@ -27,7 +27,14 @@ public class BookController {
 
     @ApiVersion(1)
     @GetMapping("/book/search")
-    public ResponseEntity<ApiResponse> search(@RequestParam String query, @RequestParam(required = false) String page, @RequestParam(required = false) String size, @RequestParam(required = false) String target, @RequestParam(required = false) String sort) {
+    public ResponseEntity<ApiResponse> searchV1(@RequestParam String query, @RequestParam(required = false) String page, @RequestParam(required = false) String size, @RequestParam(required = false) String target, @RequestParam(required = false) String sort) {
+        DocumentsVo search = bookService.search(query, page, size, target, sort);
+        return ResponseEntity.ok(ApiResponse.data(search));
+    }
+
+    @ApiVersion(2)
+    @GetMapping("/book/search")
+    public ResponseEntity<ApiResponse> searchV2(@RequestParam String query, @RequestParam(required = false) String page, @RequestParam(required = false) String size, @RequestParam(required = false) String target, @RequestParam(required = false) String sort) {
         DocumentsVo search = bookService.search(query, page, size, target, sort);
         return ResponseEntity.ok(ApiResponse.data(search));
     }
@@ -65,7 +72,7 @@ public class BookController {
     public ResponseEntity<ApiResponse> bookmarks() {
         Long userId = webSecurityContextt.getAuthenticationUserId();
         List<Bookmark> bookmarks = bookService.getBookmarks(userId);
-        return ResponseEntity.ok(ApiResponse.data(bookmarks.stream().map(bookmark -> bookmark.toVo()).collect(Collectors.toList())));
+        return ResponseEntity.ok(ApiResponse.data(bookmarks.stream().map(bookmark -> BookmarkVo.of(bookmark)).collect(Collectors.toList())));
     }
 
     @ApiVersion(1)
@@ -73,7 +80,7 @@ public class BookController {
     public ResponseEntity<ApiResponse> createBookmark(@RequestParam String query, @RequestParam int page, @RequestParam int size, @RequestParam String target, @RequestParam String sort
             , @RequestParam(required = false) String isbn, @RequestParam(required = false) String barcode, @RequestParam(required = false) String publisher, @RequestParam(required = false) String title) {
         Long userId = webSecurityContextt.getAuthenticationUserId();
-        return ResponseEntity.ok(ApiResponse.data(bookService.createBookmark(userId, query, page, size, target, sort, isbn, barcode, publisher, title).toVo()));
+        return ResponseEntity.ok(ApiResponse.data(BookmarkVo.of(bookService.createBookmark(userId, query, page, size, target, sort, isbn, barcode, publisher, title))));
     }
 
     @ApiVersion(1)
@@ -83,7 +90,7 @@ public class BookController {
         Long userId = webSecurityContextt.getAuthenticationUserId();
         Optional<Bookmark> bookmark = Optional.ofNullable(bookService.getBookmark(userId, query, page, size, target, sort, isbn, barcode, publisher, title));
         if (bookmark.isPresent()) {
-            return ResponseEntity.ok(ApiResponse.data(bookmark.get().toVo()));
+            return ResponseEntity.ok(ApiResponse.data(BookmarkVo.of(bookmark.get())));
         } else {
             return ResponseEntity.ok(ApiResponse.data(null));
         }

@@ -10,4 +10,6 @@ public interface BookSearchHistoryRepository extends CrudRepository<BookSearchHi
 
     List<BookSearchHistory> findTop10ByUserIdOrderByIdDesc(Long userId);
 
+    BookSearchHistory findByUserIdAndKeyword(Long userId, String keyword);
+
 }

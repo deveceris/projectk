@@ -1,4 +1,4 @@
-package kr.co.eceris.projectk.auth;
+package kr.co.eceris.projectk.security;
 
 import kr.co.eceris.projectk.user.User;
 import kr.co.eceris.projectk.user.UserRepository;

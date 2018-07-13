@@ -5,9 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,4 +20,9 @@ public class BookmarkVo {
     private String barcode;
     private String publisher;
     private String title;
+
+    public static BookmarkVo of(Bookmark bookmark) {
+        return new BookmarkVo(bookmark.getId(), bookmark.getQuery(), bookmark.getPage(), bookmark.getSize(), bookmark.getTarget(), bookmark.getSort(),
+                bookmark.getIsbn(), bookmark.getBarcode(), bookmark.getPublisher(), bookmark.getTitle());
+    }
 }

@@ -1,4 +1,4 @@
-package kr.co.eceris.projectk.auth;
+package kr.co.eceris.projectk.security;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -28,8 +28,9 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException, IOException, ServletException {
 		AppCredential user = new ObjectMapper().readValue(request.getInputStream(), AppCredential.class);
-		return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(),
-				user.getPassword(), Collections.emptyList()));
+        String password = EncryptUtil.decrypt(request.getRemoteAddr(), user.getPassword());
+        return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(),
+				password, Collections.emptyList()));
 	}
 
 	@Override

@@ -1,11 +1,13 @@
 package kr.co.eceris.projectk.user;
 
 import kr.co.eceris.projectk.ApiResponse;
+import kr.co.eceris.projectk.security.EncryptUtil;
 import kr.co.eceris.projectk.config.ApiVersion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,9 +27,11 @@ public class UserController {
 
     @ApiVersion(1)
     @PostMapping("/user")
-    public ResponseEntity<ApiResponse> create(@RequestBody UserVo userVo) {
+    public ResponseEntity<ApiResponse> create(HttpServletRequest req, @RequestBody UserVo userVo) {
         User saved = null;
         try {
+            String password = EncryptUtil.decrypt(req.getRemoteAddr(), userVo.getPassword());
+            userVo.setPassword(password);
             saved = userService.create(userVo);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(ApiResponse.message(e.getMessage()));
@@ -51,6 +55,12 @@ public class UserController {
         } else {
             return ResponseEntity.ok(ApiResponse.data(null));
         }
+    }
+
+    @GetMapping("/api/config")
+    public ResponseEntity<ApiResponse> config(HttpServletRequest req) {
+        String remoteAddr = req.getRemoteAddr();
+        return ResponseEntity.ok(ApiResponse.data(remoteAddr));
     }
 
 }

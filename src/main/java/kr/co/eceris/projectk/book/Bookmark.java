@@ -33,7 +33,4 @@ public class Bookmark {
     private String publisher;
     private String title;
 
-    public BookmarkVo toVo() {
-        return new BookmarkVo(id, query, page, size, target, sort, isbn, barcode, publisher, title);
-    }
 }

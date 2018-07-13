@@ -1,4 +1,4 @@
-package kr.co.eceris.projectk.auth;
+package kr.co.eceris.projectk.security;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

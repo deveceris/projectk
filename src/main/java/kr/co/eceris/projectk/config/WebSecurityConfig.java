@@ -1,7 +1,7 @@
 package kr.co.eceris.projectk.config;
 
-import kr.co.eceris.projectk.auth.JWTAuthenticationFilter;
-import kr.co.eceris.projectk.auth.JWTLoginFilter;
+import kr.co.eceris.projectk.security.JWTAuthenticationFilter;
+import kr.co.eceris.projectk.security.JWTLoginFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -35,6 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/h2/**").permitAll()
 
                 .antMatchers("/favicon.ico").permitAll()
+                .antMatchers("/assets/**").permitAll()
                 .antMatchers("/*.css").permitAll()
                 .antMatchers("/*.js").permitAll()
 
@@ -47,6 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/bookmark").permitAll()
                 .antMatchers("/book").permitAll()
                 .antMatchers("/signup").permitAll()
+                .antMatchers("/api/config").permitAll()
                 .antMatchers("/").permitAll()
                 .anyRequest().authenticated()
                 .and()
