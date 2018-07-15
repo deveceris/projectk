@@ -28,10 +28,6 @@ public class User {
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Bookmark> bookmark;
 
-    public UserVo toVo() {
-        return new UserVo(this.id, this.username);
-    }
-
     public static User of(UserVo vo) {
         return new User(vo.getId(), vo.getUsername(), vo.getPassword(), Lists.newArrayList());
     }

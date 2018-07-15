@@ -22,7 +22,7 @@ public class UserController {
     @GetMapping("/users")
     public ResponseEntity<ApiResponse> list() {
         List<User> users = userService.getUsers();
-        return ResponseEntity.ok(ApiResponse.data(users.stream().map(user -> user.toVo()).collect(Collectors.toList())));
+        return ResponseEntity.ok(ApiResponse.data(users.stream().map(user -> UserVo.of(user)).collect(Collectors.toList())));
     }
 
     @ApiVersion(1)
@@ -36,14 +36,14 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(ApiResponse.message(e.getMessage()));
         }
-        return ResponseEntity.ok(ApiResponse.data(saved.toVo()));
+        return ResponseEntity.ok(ApiResponse.data(UserVo.of(saved)));
     }
 
     @ApiVersion(1)
     @GetMapping("/user/{id}")
     public ResponseEntity<ApiResponse> get(@PathVariable Long id) {
         User saved = userService.get(id);
-        return ResponseEntity.ok(ApiResponse.data(saved.toVo()));
+        return ResponseEntity.ok(ApiResponse.data(UserVo.of(saved)));
     }
 
     @ApiVersion(1)
@@ -51,7 +51,7 @@ public class UserController {
     public ResponseEntity<ApiResponse> get(@PathVariable String username) {
         Optional<User> saved = Optional.ofNullable(userService.get(username));
         if (saved.isPresent()) {
-            return ResponseEntity.ok(ApiResponse.data(saved.get().toVo()));
+            return ResponseEntity.ok(ApiResponse.data(UserVo.of(saved.get())));
         } else {
             return ResponseEntity.ok(ApiResponse.data(null));
         }

@@ -27,7 +27,7 @@ public class BookService {
 
     @Transactional(readOnly = true)
     public List<Bookmark> getBookmarks(Long userId) {
-        return bookmarkRepository.findByUserId(userId);
+        return bookmarkRepository.findByUserIdOrderByIdDesc(userId);
     }
 
     @Transactional
@@ -52,20 +52,9 @@ public class BookService {
         return bookmarkRepository.findByUserIdAndQueryAndPageAndSizeAndTargetAndSortAndIsbnAndBarcodeAndPublisherAndTitle(userId, query, page, size, target, sort, isbn, barcode, publisher, title);
     }
 
-    @Transactional(readOnly = true)
-    public Bookmark getBookmark(Long userId, String isbn) {
-        return bookmarkRepository.findByUserIdAndIsbn(userId, isbn);
-    }
-
     @Transactional
     public void deleteBookmark(Long id) {
         bookmarkRepository.deleteById(id);
-    }
-
-
-    @Transactional(readOnly = true)
-    public BookSearchHistory getHistory(Long userId, String keyword) {
-        return bookSearchHistoryRepository.findByUserIdAndKeyword(userId, keyword);
     }
 
     @Transactional

@@ -16,9 +16,6 @@ import java.util.stream.Collectors;
 public class BookController {
 
     @Autowired
-    private BookApiConnector bookApiConnector;
-
-    @Autowired
     private BookService bookService;
 
     @Autowired
