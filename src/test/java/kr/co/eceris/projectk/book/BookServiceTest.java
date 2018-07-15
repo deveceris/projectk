@@ -17,7 +17,6 @@ public class BookServiceTest extends TestContext {
     public void 북마크생성() {
         String title = "개미";
         Bookmark bookmark = bookService.createBookmark(1l, title, 1, 10, "all", "accuracy", "isbn", "바코드", "출판사", title);
-//        createBookmark(Long userId, String query, int page, int size, String target, String sort, String isbn, String barcode, String publisher, String title) {
         Assert.assertTrue("is same title", title.equals(bookmark.getTitle()));
     }
 
@@ -36,7 +35,6 @@ public class BookServiceTest extends TestContext {
         bookService.createBookmark(1l, "개미3", 3, 10, "all", "accuracy", "isbn", "바코드", "출판사3", "개미3");
         bookService.createBookmark(1l, "개미4", 4, 10, "all", "accuracy", "isbn", "바코드", "출판사4", "개미4");
         bookService.createBookmark(1l, "개미5", 5, 10, "all", "accuracy", "isbn", "바코드", "출판사5", "개미5");
-
 
         Assert.assertTrue("is same count", bookService.getBookmarks(1l).size() == 5);
     }

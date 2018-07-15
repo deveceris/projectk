@@ -28,6 +28,7 @@
 1. maven 프로젝트이므로 maven spring-boot:run 으로 실행 가능합니다.
 2. 만약 IDE에서 실행하고 싶다면, Application.java의 main함수를 run 합니다. 
 3. http://localhost:8000 에서 서비스 확인  
+4. 회원가입을 하여도 좋지만 기본 데이터가 들어가 있는 사용자(test1/test1)로 테스트도 가능합니다.
 
 # 주의사항
 1. 만약 IntelliJ를 사용하여 실행한다면 [여기](http://blog.woniper.net/229)를 참고하여 lombok 플러그인을 설치하셔야 합니다.

@@ -8,13 +8,9 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 import org.springframework.web.servlet.view.xml.MappingJackson2XmlView;
 
-//TODO 여기가 문제다 !!!!
-//@EnableWebMvc
 @Configuration
-//public class WebMvcConfig implements WebMvcConfigurer {
 public class WebMvcConfig extends WebMvcConfigurationSupport {
-//
-//    @Bean
+
     @Override
     protected RequestMappingHandlerMapping createRequestMappingHandlerMapping() {
         return new ApiVersionRequestMappingHandlerMapping("api/v");
