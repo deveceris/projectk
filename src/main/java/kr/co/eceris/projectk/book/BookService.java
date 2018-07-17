@@ -27,6 +27,7 @@ public class BookService {
 
     /**
      * 북마크 목록 조회
+     *
      * @param userId
      * @return
      */
@@ -54,29 +55,29 @@ public class BookService {
 
     /**
      * 북마크 조회
-     * @param userId 사용자아이디
-     * @param query 검색쿼리(복합 식별자)
-     * @param page 페이지(복합 식별자)
-     * @param size 페이지당 아이템 갯수(복합 식별자)
-     * @param target 검색 조건(복합 식별자)
-     * @param sort 정렬방식(복합 식별자)
-     * @param isbn ISBN(복합 식별자)
-     * @param barcode 바코드(복합 식별자)
+     *
+     * @param userId    사용자아이디
+     * @param query     검색쿼리(복합 식별자)
+     * @param page      페이지(복합 식별자)
+     * @param size      페이지당 아이템 갯수(복합 식별자)
+     * @param target    검색 조건(복합 식별자)
+     * @param sort      정렬방식(복합 식별자)
+     * @param isbn      ISBN(복합 식별자)
+     * @param barcode   바코드(복합 식별자)
      * @param publisher 출판사(복합 식별자)
-     * @param title 책 제목(복합 식별자)
+     * @param title     책 제목(복합 식별자)
      * @return
      */
     @Transactional(readOnly = true)
     public Bookmark getBookmark(Long userId, String query, int page, int size, String target, String sort, String isbn, String barcode, String publisher, String title) {
-        Optional<Bookmark> bookmark = bookmarkRepository.findByUserIdAndQueryAndPageAndSizeAndTargetAndSortAndIsbnAndBarcodeAndPublisherAndTitle(userId, query, page, size, target, sort, isbn, barcode, publisher, title);
-        if (!bookmark.isPresent()) {
-            throw new IllegalArgumentException("not found bookmark");
-        }
-        return bookmark.get();
+        return bookmarkRepository
+                .findByUserIdAndQueryAndPageAndSizeAndTargetAndSortAndIsbnAndBarcodeAndPublisherAndTitle(userId, query, page, size, target, sort, isbn, barcode, publisher, title)
+                .orElse(null);
     }
 
     /**
      * 북마크 삭제
+     *
      * @param id
      */
     @Transactional
@@ -86,24 +87,26 @@ public class BookService {
 
     /**
      * 검색 히스토리 생성
+     *
      * @param userId
      * @param keyword
      * @return
      */
     @Transactional
     public BookSearchHistory createHistory(Long userId, String keyword) {
-        BookSearchHistory saved = bookSearchHistoryRepository.findByUserIdAndKeyword(userId, keyword);
-        if (Optional.ofNullable(saved).isPresent()) {
-            return saved;
-        }
-        BookSearchHistory history = new BookSearchHistory();
-        history.setKeyword(keyword);
-        history.setUserId(userId);
-        return bookSearchHistoryRepository.save(history);
+        return bookSearchHistoryRepository
+                .findByUserIdAndKeyword(userId, keyword)
+                .orElseGet(() -> {
+                    BookSearchHistory history = new BookSearchHistory();
+                    history.setKeyword(keyword);
+                    history.setUserId(userId);
+                    return bookSearchHistoryRepository.save(history);
+                });
     }
 
     /**
      * 최근 10개의 검색 히스토리 조회
+     *
      * @param userId
      * @return
      */
@@ -114,11 +117,12 @@ public class BookService {
 
     /**
      * 책 검색
-     * @param query 검색어
-     * @param page 페이지
-     * @param size 페이지당 갯수
+     *
+     * @param query  검색어
+     * @param page   페이지
+     * @param size   페이지당 갯수
      * @param target 검색조건
-     * @param sort 정렬
+     * @param sort   정렬
      * @return
      */
     public DocumentsVo search(String query, String page, String size, String target, String sort) {
@@ -127,6 +131,7 @@ public class BookService {
 
     /**
      * 책 상세 검색
+     *
      * @param query
      * @param page
      * @param size
@@ -148,7 +153,7 @@ public class BookService {
                     } else if (!StringUtils.isEmpty(bookVo.getPublisher()) && bookVo.getPublisher().equals(publisher)) {
                         if (!StringUtils.isEmpty(bookVo.getTitle()) && bookVo.getTitle().equals(title)) {
                             return true;
-                        } else{
+                        } else {
                             return false;
                         }
                     } else {

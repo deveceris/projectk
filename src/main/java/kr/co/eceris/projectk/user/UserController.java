@@ -1,8 +1,8 @@
 package kr.co.eceris.projectk.user;
 
 import kr.co.eceris.projectk.ApiResponse;
-import kr.co.eceris.projectk.security.EncryptUtil;
 import kr.co.eceris.projectk.config.ApiVersion;
+import kr.co.eceris.projectk.security.EncryptUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +20,7 @@ public class UserController {
 
     /**
      * 사용자 목록조회
+     *
      * @return
      */
     @ApiVersion(1)
@@ -31,6 +32,7 @@ public class UserController {
 
     /**
      * 사용자 생성
+     *
      * @param req
      * @param userVo
      * @return
@@ -51,34 +53,33 @@ public class UserController {
 
     /**
      * 사용자 조회
+     *
      * @param id
      * @return
      */
     @ApiVersion(1)
     @GetMapping("/user/{id}")
     public ResponseEntity<ApiResponse> get(@PathVariable Long id) {
-        User saved = userService.get(id);
-        return ResponseEntity.ok(ApiResponse.data(UserVo.of(saved)));
+        UserVo userVo = UserVo.of(userService.get(id));
+        return ResponseEntity.ok(ApiResponse.data(userVo));
     }
 
     /**
      * 사용자 조회(username)
+     *
      * @param username
      * @return
      */
     @ApiVersion(1)
     @GetMapping("/user/username/{username}")
     public ResponseEntity<ApiResponse> get(@PathVariable String username) {
-        Optional<User> saved = Optional.ofNullable(userService.get(username));
-        if (saved.isPresent()) {
-            return ResponseEntity.ok(ApiResponse.data(UserVo.of(saved.get())));
-        } else {
-            return ResponseEntity.ok(ApiResponse.data(null));
-        }
+        UserVo userVo = Optional.ofNullable(userService.get(username)).map(user -> UserVo.of(user)).orElse(null);
+        return ResponseEntity.ok(ApiResponse.data(userVo));
     }
 
     /**
      * 암호화를 위한 설정 값조회
+     *
      * @param req
      * @return
      */

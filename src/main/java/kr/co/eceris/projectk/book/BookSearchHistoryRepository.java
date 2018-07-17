@@ -4,12 +4,13 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BookSearchHistoryRepository extends CrudRepository<BookSearchHistory, Long> {
 
     List<BookSearchHistory> findTop10ByUserIdOrderByIdDesc(Long userId);
 
-    BookSearchHistory findByUserIdAndKeyword(Long userId, String keyword);
+    Optional<BookSearchHistory> findByUserIdAndKeyword(Long userId, String keyword);
 
 }

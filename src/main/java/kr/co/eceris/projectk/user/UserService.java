@@ -3,6 +3,7 @@ package kr.co.eceris.projectk.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,17 +19,21 @@ public class UserService {
 
     /**
      * 사용자 목록 조회
+     *
      * @return
      */
+    @Transactional(readOnly = true)
     public List<User> getUsers() {
         return userRepository.findByIdIsNotNull();
     }
 
     /**
      * 사용자 생성
+     *
      * @param userVo
      * @return
      */
+    @Transactional
     public User create(UserVo userVo) {
         Optional<User> check = userRepository.findByUsername(userVo.getUsername());
         if (check.isPresent()) {
@@ -41,28 +46,28 @@ public class UserService {
 
     /**
      * 사용자 조회
+     *
      * @param id
      * @return
      */
+    @Transactional(readOnly = true)
     public User get(Long id) {
-        Optional<User> optionalUser = userRepository.findById(id);
-        if (!optionalUser.isPresent()) {
-            throw new IllegalArgumentException("not found user");
-        }
-        return optionalUser.get();
+        return userRepository
+                .findById(id)
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     /**
      * 사용자 조회(username)
+     *
      * @param username
      * @return
      */
+    @Transactional(readOnly = true)
     public User get(String username) {
-        Optional<User> user = userRepository.findByUsername(username);
-        if(!user.isPresent()) {
-            return null;
-        }
-        return user.get();
+        return userRepository
+                .findByUsername(username)
+                .orElse(null);
     }
 
 }
