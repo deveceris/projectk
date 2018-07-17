@@ -68,9 +68,11 @@ public class BookService {
      */
     @Transactional(readOnly = true)
     public Bookmark getBookmark(Long userId, String query, int page, int size, String target, String sort, String isbn, String barcode, String publisher, String title) {
-        return bookmarkRepository.findByUserIdAndQueryAndPageAndSizeAndTargetAndSortAndIsbnAndBarcodeAndPublisherAndTitle(userId, query, page, size, target, sort, isbn, barcode, publisher, title).orElseThrow(() -> {
+        Optional<Bookmark> bookmark = bookmarkRepository.findByUserIdAndQueryAndPageAndSizeAndTargetAndSortAndIsbnAndBarcodeAndPublisherAndTitle(userId, query, page, size, target, sort, isbn, barcode, publisher, title);
+        if (!bookmark.isPresent()) {
             throw new IllegalArgumentException("not found bookmark");
-        });
+        }
+        return bookmark.get();
     }
 
     /**

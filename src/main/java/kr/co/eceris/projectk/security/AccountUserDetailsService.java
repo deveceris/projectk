@@ -19,8 +19,10 @@ public class AccountUserDetailsService implements UserDetailsService {
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = repository.findByUsername(username);
-        return new AccountUserDetails(user.orElseThrow(() -> {
+        if (!user.isPresent()) {
             throw new UsernameNotFoundException(username);
-        }));
+        }
+
+        return new AccountUserDetails(user.get());
     }
 }

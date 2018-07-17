@@ -30,9 +30,10 @@ public class UserService {
      * @return
      */
     public User create(UserVo userVo) {
-        userRepository.findByUsername(userVo.getUsername()).orElseThrow(() -> {
+        Optional<User> check = userRepository.findByUsername(userVo.getUsername());
+        if (check.isPresent()) {
             throw new IllegalArgumentException("username duplicated.");
-        });
+        }
         User target = User.of(userVo);
         target.setPassword(passwordEncoder.encode(userVo.getPassword()));
         return userRepository.save(target);
@@ -44,10 +45,11 @@ public class UserService {
      * @return
      */
     public User get(Long id) {
-        Optional<User> user = userRepository.findById(id);
-        return user.orElseThrow(() -> {
-            throw new IllegalArgumentException("username duplicated.");
-        });
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (!optionalUser.isPresent()) {
+            throw new IllegalArgumentException("not found user");
+        }
+        return optionalUser.get();
     }
 
     /**
@@ -57,8 +59,10 @@ public class UserService {
      */
     public User get(String username) {
         Optional<User> user = userRepository.findByUsername(username);
-        return user.orElseThrow(() -> {
+        if(!user.isPresent()) {
             throw new IllegalArgumentException("not found user");
-        });
+        }
+        return user.get();
     }
+
 }
