@@ -18,6 +18,10 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    /**
+     * 사용자 목록조회
+     * @return
+     */
     @ApiVersion(1)
     @GetMapping("/users")
     public ResponseEntity<ApiResponse> list() {
@@ -25,6 +29,12 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.data(users.stream().map(user -> UserVo.of(user)).collect(Collectors.toList())));
     }
 
+    /**
+     * 사용자 생성
+     * @param req
+     * @param userVo
+     * @return
+     */
     @ApiVersion(1)
     @PostMapping("/user")
     public ResponseEntity<ApiResponse> create(HttpServletRequest req, @RequestBody UserVo userVo) {
@@ -39,6 +49,11 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.data(UserVo.of(saved)));
     }
 
+    /**
+     * 사용자 조회
+     * @param id
+     * @return
+     */
     @ApiVersion(1)
     @GetMapping("/user/{id}")
     public ResponseEntity<ApiResponse> get(@PathVariable Long id) {
@@ -46,6 +61,11 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.data(UserVo.of(saved)));
     }
 
+    /**
+     * 사용자 조회(username)
+     * @param username
+     * @return
+     */
     @ApiVersion(1)
     @GetMapping("/user/username/{username}")
     public ResponseEntity<ApiResponse> get(@PathVariable String username) {
@@ -57,6 +77,11 @@ public class UserController {
         }
     }
 
+    /**
+     * 암호화를 위한 설정 값조회
+     * @param req
+     * @return
+     */
     @GetMapping("/api/config")
     public ResponseEntity<ApiResponse> config(HttpServletRequest req) {
         String remoteAddr = req.getRemoteAddr();

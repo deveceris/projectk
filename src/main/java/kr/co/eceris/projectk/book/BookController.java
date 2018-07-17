@@ -22,6 +22,16 @@ public class BookController {
     private WebSecurityContext webSecurityContextt;
 
 
+    /**
+     * 도서 검색
+     *
+     * @param query 검색어
+     * @param page 페이지
+     * @param size 페이지 당 갯수
+     * @param target 검색 조건
+     * @param sort 정렬방식
+     * @return
+     */
     @ApiVersion(1)
     @GetMapping("/book/search")
     public ResponseEntity<ApiResponse> searchV1(@RequestParam String query, @RequestParam(required = false) String page, @RequestParam(required = false) String size, @RequestParam(required = false) String target, @RequestParam(required = false) String sort) {
@@ -29,6 +39,16 @@ public class BookController {
         return ResponseEntity.ok(ApiResponse.data(search));
     }
 
+    /**
+     * 도서 검색
+     *
+     * @param query 검색어
+     * @param page 페이지
+     * @param size 페이지 당 갯수
+     * @param target 검색 조건
+     * @param sort 정렬방식
+     * @return
+     */
     @ApiVersion(2)
     @GetMapping("/book/search")
     public ResponseEntity<ApiResponse> searchV2(@RequestParam String query, @RequestParam(required = false) String page, @RequestParam(required = false) String size, @RequestParam(required = false) String target, @RequestParam(required = false) String sort) {
@@ -36,6 +56,20 @@ public class BookController {
         return ResponseEntity.ok(ApiResponse.data(search));
     }
 
+    /**
+     * 도서 상세 조회
+     * (식별자로 ISBN은 충분치 않아, 복합식별자로 아래 파라미터들을 사용)
+     * @param query
+     * @param page
+     * @param size
+     * @param target
+     * @param sort
+     * @param isbn
+     * @param barcode
+     * @param publisher
+     * @param title
+     * @return
+     */
     @ApiVersion(1)
     @GetMapping("/book/inquiry")
     public ResponseEntity<ApiResponse> inquiry(@RequestParam String query, @RequestParam String page, @RequestParam String size, @RequestParam String target, @RequestParam String sort
@@ -48,6 +82,10 @@ public class BookController {
         }
     }
 
+    /**
+     * 검색 히스토리 조회
+     * @return
+     */
     @ApiVersion(1)
     @GetMapping("/histories")
     public ResponseEntity<ApiResponse> histories() {
@@ -56,6 +94,11 @@ public class BookController {
         return ResponseEntity.ok(ApiResponse.data(bookSearchHistories));
     }
 
+    /**
+     * 검색 히스토리 생성
+     * @param keyword
+     * @return
+     */
     @ApiVersion(1)
     @PostMapping("/history")
     public ResponseEntity<ApiResponse> createHistory(@RequestParam String keyword) {
@@ -64,6 +107,10 @@ public class BookController {
         return ResponseEntity.ok(ApiResponse.data(history));
     }
 
+    /**
+     * 북마크 목록 조회
+     * @return
+     */
     @ApiVersion(1)
     @GetMapping("/bookmarks")
     public ResponseEntity<ApiResponse> bookmarks() {
@@ -72,6 +119,19 @@ public class BookController {
         return ResponseEntity.ok(ApiResponse.data(bookmarks.stream().map(bookmark -> BookmarkVo.of(bookmark)).collect(Collectors.toList())));
     }
 
+    /**
+     * 북마크 생성
+     * @param query
+     * @param page
+     * @param size
+     * @param target
+     * @param sort
+     * @param isbn
+     * @param barcode
+     * @param publisher
+     * @param title
+     * @return
+     */
     @ApiVersion(1)
     @PostMapping("/bookmark")
     public ResponseEntity<ApiResponse> createBookmark(@RequestParam String query, @RequestParam int page, @RequestParam int size, @RequestParam String target, @RequestParam String sort
@@ -80,6 +140,19 @@ public class BookController {
         return ResponseEntity.ok(ApiResponse.data(BookmarkVo.of(bookService.createBookmark(userId, query, page, size, target, sort, isbn, barcode, publisher, title))));
     }
 
+    /**
+     * 북마크 조회
+     * @param query
+     * @param page
+     * @param size
+     * @param target
+     * @param sort
+     * @param isbn
+     * @param barcode
+     * @param publisher
+     * @param title
+     * @return
+     */
     @ApiVersion(1)
     @GetMapping("/bookmark")
     public ResponseEntity<ApiResponse> getBookmark(@RequestParam String query, @RequestParam int page, @RequestParam int size, @RequestParam String target, @RequestParam String sort
@@ -93,6 +166,11 @@ public class BookController {
         }
     }
 
+    /**
+     * 북마크 삭제
+     * @param id
+     * @return
+     */
     @ApiVersion(1)
     @DeleteMapping("/bookmark/{id}")
     public ResponseEntity delete(@PathVariable Long id) {

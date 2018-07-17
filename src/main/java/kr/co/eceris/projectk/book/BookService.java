@@ -25,6 +25,11 @@ public class BookService {
     @Autowired
     private UserService userService;
 
+    /**
+     * 북마크 목록 조회
+     * @param userId
+     * @return
+     */
     @Transactional(readOnly = true)
     public List<Bookmark> getBookmarks(Long userId) {
         return bookmarkRepository.findByUserIdOrderByIdDesc(userId);
@@ -47,16 +52,42 @@ public class BookService {
         return bookmarkRepository.save(bookmark);
     }
 
+    /**
+     * 북마크 조회
+     * @param userId 사용자아이디
+     * @param query 검색쿼리(복합 식별자)
+     * @param page 페이지(복합 식별자)
+     * @param size 페이지당 아이템 갯수(복합 식별자)
+     * @param target 검색 조건(복합 식별자)
+     * @param sort 정렬방식(복합 식별자)
+     * @param isbn ISBN(복합 식별자)
+     * @param barcode 바코드(복합 식별자)
+     * @param publisher 출판사(복합 식별자)
+     * @param title 책 제목(복합 식별자)
+     * @return
+     */
     @Transactional(readOnly = true)
     public Bookmark getBookmark(Long userId, String query, int page, int size, String target, String sort, String isbn, String barcode, String publisher, String title) {
-        return bookmarkRepository.findByUserIdAndQueryAndPageAndSizeAndTargetAndSortAndIsbnAndBarcodeAndPublisherAndTitle(userId, query, page, size, target, sort, isbn, barcode, publisher, title);
+        return bookmarkRepository.findByUserIdAndQueryAndPageAndSizeAndTargetAndSortAndIsbnAndBarcodeAndPublisherAndTitle(userId, query, page, size, target, sort, isbn, barcode, publisher, title).orElseThrow(() -> {
+            throw new IllegalArgumentException("not found bookmark");
+        });
     }
 
+    /**
+     * 북마크 삭제
+     * @param id
+     */
     @Transactional
     public void deleteBookmark(Long id) {
         bookmarkRepository.deleteById(id);
     }
 
+    /**
+     * 검색 히스토리 생성
+     * @param userId
+     * @param keyword
+     * @return
+     */
     @Transactional
     public BookSearchHistory createHistory(Long userId, String keyword) {
         BookSearchHistory saved = bookSearchHistoryRepository.findByUserIdAndKeyword(userId, keyword);
@@ -69,15 +100,42 @@ public class BookService {
         return bookSearchHistoryRepository.save(history);
     }
 
+    /**
+     * 최근 10개의 검색 히스토리 조회
+     * @param userId
+     * @return
+     */
     @Transactional(readOnly = true)
     public List<BookSearchHistory> searchTop10Histories(Long userId) {
         return bookSearchHistoryRepository.findTop10ByUserIdOrderByIdDesc(userId);
     }
 
+    /**
+     * 책 검색
+     * @param query 검색어
+     * @param page 페이지
+     * @param size 페이지당 갯수
+     * @param target 검색조건
+     * @param sort 정렬
+     * @return
+     */
     public DocumentsVo search(String query, String page, String size, String target, String sort) {
         return apiConnector.search(query, page, size, target, sort);
     }
 
+    /**
+     * 책 상세 검색
+     * @param query
+     * @param page
+     * @param size
+     * @param target
+     * @param sort
+     * @param isbn
+     * @param barcode
+     * @param publisher
+     * @param title
+     * @return
+     */
     public BookVo inquiry(String query, String page, String size, String target, String sort, String isbn, String barcode, String publisher, String title) {
         DocumentsVo search = apiConnector.search(query, page, size, target, sort);
         Optional<BookVo> optionalBookVo = search.getDocuments().stream().filter(bookVo -> {

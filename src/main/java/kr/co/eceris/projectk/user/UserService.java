@@ -16,30 +16,49 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * 사용자 목록 조회
+     * @return
+     */
     public List<User> getUsers() {
         return userRepository.findByIdIsNotNull();
     }
 
+    /**
+     * 사용자 생성
+     * @param userVo
+     * @return
+     */
     public User create(UserVo userVo) {
-        User check = userRepository.findByUsername(userVo.getUsername());
-        if (check != null) {
+        userRepository.findByUsername(userVo.getUsername()).orElseThrow(() -> {
             throw new IllegalArgumentException("username duplicated.");
-        }
+        });
         User target = User.of(userVo);
         target.setPassword(passwordEncoder.encode(userVo.getPassword()));
         return userRepository.save(target);
     }
 
+    /**
+     * 사용자 조회
+     * @param id
+     * @return
+     */
     public User get(Long id) {
-        Optional<User> optionalUser = userRepository.findById(id);
-        if (!optionalUser.isPresent()) {
-            throw new IllegalArgumentException("not found user");
-        }
-        return optionalUser.get();
+        Optional<User> user = userRepository.findById(id);
+        return user.orElseThrow(() -> {
+            throw new IllegalArgumentException("username duplicated.");
+        });
     }
 
+    /**
+     * 사용자 조회(username)
+     * @param username
+     * @return
+     */
     public User get(String username) {
-        return userRepository.findByUsername(username);
+        Optional<User> user = userRepository.findByUsername(username);
+        return user.orElseThrow(() -> {
+            throw new IllegalArgumentException("not found user");
+        });
     }
-
 }
