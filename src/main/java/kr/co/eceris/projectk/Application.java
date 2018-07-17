@@ -1,8 +1,11 @@
 package kr.co.eceris.projectk;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,10 +42,24 @@ public class Application {
 
     @Bean
     public RestTemplate restTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
+        RestTemplate restTemplate = new RestTemplate(httpRequestFactory());
         restTemplate.getMessageConverters()
                 .add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
         return restTemplate;
+    }
+
+    @Bean
+    public HttpComponentsClientHttpRequestFactory httpRequestFactory() {
+        HttpComponentsClientHttpRequestFactory httpComponentsClientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+        httpComponentsClientHttpRequestFactory.setReadTimeout(5000); // 읽기시간초과, ms
+        httpComponentsClientHttpRequestFactory.setConnectTimeout(3000); // 연결시간초과, ms
+
+        HttpClient httpClient = HttpClientBuilder.create()
+                .setMaxConnTotal(100) // connection pool
+                .build();
+        httpComponentsClientHttpRequestFactory.setHttpClient(httpClient);
+        return httpComponentsClientHttpRequestFactory;
+
     }
 
     @Bean

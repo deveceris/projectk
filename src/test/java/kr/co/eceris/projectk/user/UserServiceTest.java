@@ -14,7 +14,7 @@ public class UserServiceTest extends TestContext {
     }
 
     @Test
-    public void 유저생성테스트() {
+    public void 테스트_사용자_생성해보자() {
         UserVo userVo = new UserVo();
         userVo.setUsername("테스트유저");
         userVo.setPassword("test");
@@ -23,7 +23,7 @@ public class UserServiceTest extends TestContext {
     }
 
     @Test
-    public void 유저조회() {
+    public void 테스트_유저_잘있나() {
         UserVo userVo = new UserVo();
         userVo.setUsername("테스트유저1");
         userVo.setPassword("test1");

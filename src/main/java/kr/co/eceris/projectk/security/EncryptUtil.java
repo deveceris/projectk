@@ -19,26 +19,19 @@ public final class EncryptUtil {
 
     //    https://namu.wiki/w/AES
     public static final String decrypt(String secret, String cipherText) {
-//        String secret = "test";
-//        String cipherText = "U2FsdGVkX1+w5mJIRfmgiZavdZmYtTx/qEEQx/q3bTQ=";
-
         byte[] cipherData = Base64.getDecoder().decode(cipherText);
         byte[] saltData = Arrays.copyOfRange(cipherData, 8, 16);
 
         MessageDigest md5 = null;
-        try {
-            md5 = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException("failed to decrypt text : " + e);
-        }
-        final byte[][] keyAndIV = GenerateKeyAndIV(32, 16, 1, saltData, secret.getBytes(StandardCharsets.UTF_8), md5);
-        SecretKeySpec key = new SecretKeySpec(keyAndIV[0], "AES");
-        IvParameterSpec iv = new IvParameterSpec(keyAndIV[1]);
-
-        byte[] encrypted = Arrays.copyOfRange(cipherData, 16, cipherData.length);
         byte[] decryptedData;
         try {
-            Cipher aesCBC = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            md5 = MessageDigest.getInstance("MD5"); //MessageDigest를 가져와서 ..
+            final byte[][] keyAndIV = GenerateKeyAndIV(32, 16, 1, saltData, secret.getBytes(StandardCharsets.UTF_8), md5);
+            SecretKeySpec key = new SecretKeySpec(keyAndIV[0], "AES"); //AES 암호화
+            IvParameterSpec iv = new IvParameterSpec(keyAndIV[1]);
+
+            byte[] encrypted = Arrays.copyOfRange(cipherData, 16, cipherData.length);
+            Cipher aesCBC = Cipher.getInstance("AES/CBC/PKCS5Padding"); // 암호화 알고리즘 : AES, 암호화 모드: CBC, Padding 방식 : PKCS5
             aesCBC.init(Cipher.DECRYPT_MODE, key, iv);
             decryptedData = aesCBC.doFinal(encrypted);
         } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | InvalidAlgorithmParameterException | BadPaddingException | IllegalBlockSizeException e) {
@@ -57,7 +50,6 @@ public final class EncryptUtil {
         try {
             md.reset();
 
-            // Repeat process until sufficient data has been generated
             while (generatedLength < keyLength + ivLength) {
 
                 // Digest data (last digest if available, password data, salt if available)
@@ -68,7 +60,7 @@ public final class EncryptUtil {
                     md.update(salt, 0, 8);
                 md.digest(generatedData, generatedLength, digestLength);
 
-                // additional rounds
+                // 해시값 계산 및 패딩
                 for (int i = 1; i < iterations; i++) {
                     md.update(generatedData, generatedLength, digestLength);
                     md.digest(generatedData, generatedLength, digestLength);
@@ -77,7 +69,7 @@ public final class EncryptUtil {
                 generatedLength += digestLength;
             }
 
-            // Copy key and IV into separate byte arrays
+            // 키와 IV 복사
             byte[][] result = new byte[2][];
             result[0] = Arrays.copyOfRange(generatedData, 0, keyLength);
             if (ivLength > 0)
@@ -89,7 +81,7 @@ public final class EncryptUtil {
             throw new RuntimeException(e);
 
         } finally {
-            // Clean out temporary data
+            //0으로 init
             Arrays.fill(generatedData, (byte) 0);
         }
     }
