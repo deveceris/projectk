@@ -60,7 +60,7 @@ public class UserService {
     public User get(String username) {
         Optional<User> user = userRepository.findByUsername(username);
         if(!user.isPresent()) {
-            throw new IllegalArgumentException("not found user");
+            return null;
         }
         return user.get();
     }
