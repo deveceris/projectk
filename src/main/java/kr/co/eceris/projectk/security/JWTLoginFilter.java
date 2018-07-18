@@ -24,6 +24,14 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 		setAuthenticationManager(authManager);
 	}
 
+	/** 인증 수행
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws AuthenticationException
+	 * @throws IOException
+	 * @throws ServletException
+	 */
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException, IOException, ServletException {

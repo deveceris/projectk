@@ -20,6 +20,11 @@ public class AuthenticationService {
     private static final String HEADER_NAME = "Authorization";
     private static final String TOKEN_PREFIX = "ProjectK";
 
+    /**
+     * JWT 토큰 발급
+     * @param response
+     * @param username
+     */
     public static void addAuthentication(HttpServletResponse response, Authentication username) {
         AccountUserDetails accountUserDetails = (AccountUserDetails) username.getPrincipal();
         String jwt = Jwts.builder().setSubject(accountUserDetails.getUsername()).setId(accountUserDetails.getId().toString())
@@ -28,6 +33,11 @@ public class AuthenticationService {
         response.addHeader(HEADER_NAME, TOKEN_PREFIX + jwt);
     }
 
+    /**
+     * request의 헤더에서 JWT토큰을 확인하여 인증
+     * @param request
+     * @return
+     */
     public static UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
         String token = request.getHeader(HEADER_NAME);
         if (!StringUtils.isEmpty(token)) {

@@ -63,6 +63,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     }
 
+    /**
+     * userDetailsService의 passwordEncoder 지정
+     * @param auth
+     * @throws Exception
+     */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);

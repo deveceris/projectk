@@ -1,5 +1,6 @@
 package kr.co.eceris.projectk;
 
+import kr.co.eceris.projectk.config.ApiVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.boot.SpringApplication;
@@ -31,15 +32,25 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
+    /**
+     * Api 문서 제공을 위한 설정(@ApiVersion 만 제공)
+     *
+     * @return
+     */
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiVersion.class))
                 .paths(PathSelectors.any())
                 .build();
     }
 
+    /**
+     * Rest template 제공
+     *
+     * @return
+     */
     @Bean
     public RestTemplate restTemplate() {
         RestTemplate restTemplate = new RestTemplate(httpRequestFactory());
@@ -48,8 +59,7 @@ public class Application {
         return restTemplate;
     }
 
-    @Bean
-    public HttpComponentsClientHttpRequestFactory httpRequestFactory() {
+    static HttpComponentsClientHttpRequestFactory httpRequestFactory() {
         HttpComponentsClientHttpRequestFactory httpComponentsClientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
         httpComponentsClientHttpRequestFactory.setReadTimeout(5000); // 읽기시간초과, ms
         httpComponentsClientHttpRequestFactory.setConnectTimeout(3000); // 연결시간초과, ms
