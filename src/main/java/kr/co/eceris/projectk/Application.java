@@ -1,5 +1,7 @@
 package kr.co.eceris.projectk;
 
+import io.netty.channel.ChannelOption;
+import io.netty.handler.timeout.ReadTimeoutHandler;
 import kr.co.eceris.projectk.config.ApiVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -7,6 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,12 +24,16 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.nio.charset.Charset;
+import java.util.concurrent.TimeUnit;
 
 @EnableTransactionManagement
 @EnableSwagger2
 @SpringBootApplication
 @Controller
 public class Application {
+
+    public static final int READ_TIMEOUT = 5000;
+    public static final int CONNECT_TIMEOUT = 3000;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
@@ -61,15 +68,26 @@ public class Application {
 
     static HttpComponentsClientHttpRequestFactory httpRequestFactory() {
         HttpComponentsClientHttpRequestFactory httpComponentsClientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-        httpComponentsClientHttpRequestFactory.setReadTimeout(5000); // 읽기시간초과, ms
-        httpComponentsClientHttpRequestFactory.setConnectTimeout(3000); // 연결시간초과, ms
+        httpComponentsClientHttpRequestFactory.setReadTimeout(READ_TIMEOUT); // 읽기시간초과, ms
+        httpComponentsClientHttpRequestFactory.setConnectTimeout(CONNECT_TIMEOUT); // 연결시간초과, ms
 
+        // route(ip 기준)의 상황에 따라 커스터마이징이 필요할 것 같다.
         HttpClient httpClient = HttpClientBuilder.create()
-                .setMaxConnTotal(100) // connection pool
+                .setMaxConnTotal(200) // connection pool
+                .setMaxConnPerRoute(200) // route max connection
                 .build();
         httpComponentsClientHttpRequestFactory.setHttpClient(httpClient);
         return httpComponentsClientHttpRequestFactory;
+    }
 
+    @Bean
+    public ReactorClientHttpConnector reactorHttpClient() {
+        return new ReactorClientHttpConnector(
+                options -> options.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, CONNECT_TIMEOUT)
+                        .compression(true)
+                        .afterNettyContextInit(ctx -> {
+                            ctx.addHandlerLast(new ReadTimeoutHandler(READ_TIMEOUT, TimeUnit.MILLISECONDS));
+                        }));
     }
 
     @Bean

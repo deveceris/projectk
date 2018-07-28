@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Optional;
@@ -127,6 +128,20 @@ public class BookService {
      */
     public DocumentsVo search(String query, String page, String size, String target, String sort) {
         return apiConnector.search(query, page, size, target, sort);
+    }
+
+    /**
+     * 책 검색(non block)
+     *
+     * @param query  검색어
+     * @param page   페이지
+     * @param size   페이지당 갯수
+     * @param target 검색조건
+     * @param sort   정렬
+     * @return
+     */
+    public Mono<DocumentsVo> searchV2(String query, String page, String size, String target, String sort) {
+        return apiConnector.nonBlockSearch(query, page, size, target, sort);
     }
 
     /**

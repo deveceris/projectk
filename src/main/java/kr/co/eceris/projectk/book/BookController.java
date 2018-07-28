@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +41,7 @@ public class BookController {
     }
 
     /**
-     * 도서 검색
+     * 도서 검색(non block)
      *
      * @param query 검색어
      * @param page 페이지
@@ -51,9 +52,9 @@ public class BookController {
      */
     @ApiVersion(2)
     @GetMapping("/book/search")
-    public ResponseEntity<ApiResponse> searchV2(@RequestParam String query, @RequestParam(required = false) String page, @RequestParam(required = false) String size, @RequestParam(required = false) String target, @RequestParam(required = false) String sort) {
-        DocumentsVo search = bookService.search(query, page, size, target, sort);
-        return ResponseEntity.ok(ApiResponse.data(search));
+    public Mono<ApiResponse> searchV2(@RequestParam String query, @RequestParam(required = false) String page, @RequestParam(required = false) String size, @RequestParam(required = false) String target, @RequestParam(required = false) String sort) {
+        Mono<DocumentsVo> documentsVoMono = bookService.searchV2(query, page, size, target, sort);
+        return documentsVoMono.map(documentsVo -> ApiResponse.data(documentsVo));
     }
 
     /**

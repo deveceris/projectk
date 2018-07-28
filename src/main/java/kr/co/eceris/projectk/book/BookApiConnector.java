@@ -9,9 +9,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.net.URI;
@@ -31,6 +34,9 @@ public class BookApiConnector {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private ReactorClientHttpConnector reactorHttpClient;
 
     /**
      * @param query  / 검색을 원하는 질의어	/ 필수 / String
@@ -64,11 +70,44 @@ public class BookApiConnector {
         return documentsVo;
     }
 
+    public Mono<DocumentsVo> nonBlockSearch(String query, String page, String size, String target, String sort) {
+        String url = toURI(query, page, size, target, sort).toString();
+        Mono<DocumentsVo> documentsVoMono = WebClient.builder().clientConnector(reactorHttpClient)
+                .baseUrl(url)
+                .defaultHeader("Authorization", "KakaoAK " + apiKey)
+                .build()
+                .get()
+                .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, clientResponse -> {
+                    logger.error("Api call error({}) code:{}", url, clientResponse.statusCode());
+                    return Mono.error(new IllegalArgumentException("code : " + clientResponse.statusCode()));
+                })
+                .onStatus(HttpStatus::is5xxServerError, clientResponse -> {
+                    logger.error("Api call error({}) code:{}", url, clientResponse.statusCode());
+                    return Mono.error(new IllegalStateException("code : " + clientResponse.statusCode()));
+                })
+                .bodyToMono(String.class)
+                .map(body -> {
+                    JSONObject eventResult = new JSONObject(body);
+                    JSONArray documents = (JSONArray) eventResult.get("documents");
+                    JSONObject meta = (JSONObject) eventResult.get("meta");
+                    DocumentsVo documentsVo = null;
+                    try {
+                        List<BookVo> bookVos = mapper.readValue(documents.toString(), new TypeReference<List<BookVo>>() {
+                        });
+                        documentsVo = new DocumentsVo(bookVos, Boolean.valueOf(meta.get("is_end").toString()), Integer.valueOf(meta.get("pageable_count").toString()), Integer.valueOf(meta.get("pageable_count").toString()));
+                    } catch (IOException e) {
+                        logger.info("Failed to parsing DocumentsVo : {}", e);
+                    }
+                    return documentsVo;
+                });
+        return documentsVoMono;
+    }
+
     HttpHeaders getHeadersWithKey() {
-        HttpHeaders authorization = new HttpHeaders() {{
+        return new HttpHeaders() {{
             set("Authorization", "KakaoAK " + apiKey);
         }};
-        return authorization;
     }
 
     private URI toURI(String query, String page, String size, String target, String sort) {
