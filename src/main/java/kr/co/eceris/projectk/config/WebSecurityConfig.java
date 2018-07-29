@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.annotation.Resource;
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -19,7 +21,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
+    @Resource(name="userService")
     private UserDetailsService userDetailsService;
 
     @Override
@@ -52,9 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .headers()
-                .frameOptions()
-                .sameOrigin()
+                .headers().frameOptions().sameOrigin()
                 .and()
                 .addFilterBefore(new JWTLoginFilter("/api/login", authenticationManager()),
                         UsernamePasswordAuthenticationFilter.class)
