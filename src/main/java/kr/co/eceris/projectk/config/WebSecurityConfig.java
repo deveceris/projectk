@@ -43,20 +43,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers("/api/v1/user").permitAll()
                 .antMatchers("/api/v1/user/**").permitAll()
-                .antMatchers("/api/login").permitAll()
+                .antMatchers("/api/v1/login").permitAll()
 
                 .antMatchers("/login").permitAll()
                 .antMatchers("/search").permitAll()
                 .antMatchers("/bookmark").permitAll()
                 .antMatchers("/book").permitAll()
                 .antMatchers("/signup").permitAll()
-                .antMatchers("/api/config").permitAll()
+                .antMatchers("/api/v1/config").permitAll()
                 .antMatchers("/").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .headers().frameOptions().sameOrigin()
                 .and()
-                .addFilterBefore(new JWTLoginFilter("/api/login", authenticationManager()),
+                .addFilterBefore(new JWTLoginFilter("/api/v1/login", authenticationManager()),
                         UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JWTAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 

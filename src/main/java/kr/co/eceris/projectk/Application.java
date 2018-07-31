@@ -73,7 +73,7 @@ public class Application {
 
         // route(ip 기준)의 상황에 따라 커스터마이징이 필요할 것 같다.
         HttpClient httpClient = HttpClientBuilder.create()
-                .setMaxConnTotal(200) // connection pool
+                .setMaxConnTotal(200) // max connection
                 .setMaxConnPerRoute(200) // route max connection
                 .build();
         httpComponentsClientHttpRequestFactory.setHttpClient(httpClient);

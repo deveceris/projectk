@@ -83,7 +83,8 @@ public class UserController {
      * @param req
      * @return
      */
-    @GetMapping("/api/config")
+    @ApiVersion(1)
+    @GetMapping("/config")
     public ResponseEntity<ApiResponse> config(HttpServletRequest req) {
         String remoteAddr = req.getRemoteAddr();
         return ResponseEntity.ok(ApiResponse.data(remoteAddr));
