@@ -86,6 +86,15 @@ public class BookService {
         bookmarkRepository.deleteById(id);
     }
 
+    /** 북마크 삭제
+     *
+     * @param userId
+     */
+    @Transactional
+    public void deleteBookmarkByUserId(Long userId) {
+        bookmarkRepository.deleteByUserId(userId);
+    }
+
     /**
      * 검색 히스토리 생성
      *

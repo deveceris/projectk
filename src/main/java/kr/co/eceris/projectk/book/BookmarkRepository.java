@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface BookmarkRepository extends CrudRepository<Bookmark, Long> {
 
     List<Bookmark> findByUserIdOrderByIdDesc(Long userId);
+    void deleteByUserId(Long userId);
 
     //    id, query, page, size, target, sort, isbn, barcode, publisher, title
     Optional<Bookmark> findByUserIdAndQueryAndPageAndSizeAndTargetAndSortAndIsbnAndBarcodeAndPublisherAndTitle(Long userId, String query, int page, int size, String target, String sort, String isbn, String barcode, String publisher, String title);
