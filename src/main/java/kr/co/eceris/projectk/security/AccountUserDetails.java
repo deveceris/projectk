@@ -8,6 +8,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Arrays;
 import java.util.Collection;
 
+/**
+ * Security 에서 사용하는 UserDetails 에 대한 구현체
+ */
 @Slf4j
 public class AccountUserDetails implements UserDetails {
     private static final long serialVersionUID = 1L;

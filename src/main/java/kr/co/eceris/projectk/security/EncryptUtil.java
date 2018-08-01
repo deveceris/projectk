@@ -40,7 +40,7 @@ public final class EncryptUtil {
         return new String(decryptedData, StandardCharsets.UTF_8);
     }
 
-    public static byte[][] GenerateKeyAndIV(int keyLength, int ivLength, int iterations, byte[] salt, byte[] password, MessageDigest md) {
+    static byte[][] GenerateKeyAndIV(int keyLength, int ivLength, int iterations, byte[] salt, byte[] password, MessageDigest md) {
 
         int digestLength = md.getDigestLength();
         int requiredLength = (keyLength + ivLength + digestLength - 1) / digestLength * digestLength;

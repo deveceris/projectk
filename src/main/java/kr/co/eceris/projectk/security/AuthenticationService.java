@@ -23,10 +23,10 @@ public class AuthenticationService {
     /**
      * JWT 토큰 발급
      * @param response
-     * @param username
+     * @param auth
      */
-    public static void addAuthentication(HttpServletResponse response, Authentication username) {
-        AccountUserDetails accountUserDetails = (AccountUserDetails) username.getPrincipal();
+    public static void addAuthentication(HttpServletResponse response, Authentication auth) {
+        AccountUserDetails accountUserDetails = (AccountUserDetails) auth.getPrincipal();
         String jwt = Jwts.builder().setSubject(accountUserDetails.getUsername()).setId(accountUserDetails.getId().toString())
                 .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(EXPIRATION_HOUR)))
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY).compact();
